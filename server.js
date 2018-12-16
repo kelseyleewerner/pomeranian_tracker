@@ -14,42 +14,22 @@ const connection = mysql.createConnection({
   database : 'pom_tracker'
 });
 
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static('dist'))
+app.use(express.static('dist'));
 
 connection.connect();
 
 app.get('/api/v1/pomeranians', (req, res) => {
-
-
   connection.query('SELECT * from pomeranians', (error, results, fields) => {
     if (error) throw error;
     res.send(results)
   });
-
-  //connection.end();
-
-  // res.send([{
-  //   website: 'pomadoption.com',
-  //   breed: 'Pomeranian',
-  //   name: 'Joe',
-  //   age: 5,
-  //   details: 'Joe is v friendly and loves treats'
-  // }])
 })
 
 app.post('/api/v1/adoptionUrl', upload.array(), (req, res) => {
-  // const body = JSON.parse(req.body);
-
-  // connection.connect();
-
-  connection.query('INSERT INTO adoptionUrls(url) VALUES("' + req.body.url + '")');
-
-  //connection.end();
+  connection.query(`INSERT INTO adoptionUrls(url) VALUES("${req.body.url}")`);
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
