@@ -4,9 +4,10 @@ export default class UrlForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // tbd
+      url: ''
     };
 
+    this.setUrl = this.setUrl.bind(this);
     this.saveUrl = this.saveUrl.bind(this);
   }
 
@@ -14,9 +15,22 @@ export default class UrlForm extends React.Component {
 
   }
 
-  saveUrl(event) {
-    event.target.value
+  setUrl(event) {
     event.preventDefault();
+
+    this.setState({url: event.target.value});
+  }
+
+  saveUrl(event) {
+    event.preventDefault();
+
+    fetch('/api/v1/adoptionUrl', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state)
+    })
   }
 
   render() {
@@ -27,7 +41,7 @@ export default class UrlForm extends React.Component {
         <div>
           <label>
             URL:
-            <input type="text" placeholder="URL" />
+            <input type="text" placeholder="URL" name="adoptionUrl" onChange={this.setUrl} />
           </label>
           <button type="submit">
             Submit URL

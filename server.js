@@ -1,7 +1,11 @@
 const express = require('express')
-const app = express()
-const port = 3000
+const bodyParser = require('body-parser');
+const multer = require('multer');
 const mysql = require('mysql');
+
+const port = 3000
+const app = express()
+const upload = multer();
 
 const connection = mysql.createConnection({
   host     : 'localhost',
@@ -12,19 +16,22 @@ const connection = mysql.createConnection({
 
 
 
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static('dist'))
 
+connection.connect();
+
 app.get('/api/v1/pomeranians', (req, res) => {
-  connection.connect();
+
 
   connection.query('SELECT * from pomeranians', (error, results, fields) => {
     if (error) throw error;
     res.send(results)
   });
 
-  connection.end();
+  //connection.end();
 
   // res.send([{
   //   website: 'pomadoption.com',
@@ -33,6 +40,16 @@ app.get('/api/v1/pomeranians', (req, res) => {
   //   age: 5,
   //   details: 'Joe is v friendly and loves treats'
   // }])
+})
+
+app.post('/api/v1/adoptionUrl', upload.array(), (req, res) => {
+  // const body = JSON.parse(req.body);
+
+  // connection.connect();
+
+  connection.query('INSERT INTO adoptionUrls(url) VALUES("' + req.body.url + '")');
+
+  //connection.end();
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
