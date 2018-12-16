@@ -1,4 +1,5 @@
 import React from 'react'
+import UrlForm from './UrlForm'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -22,9 +23,12 @@ export default class App extends React.Component {
     const { pomeranians } = this.state;
     return (
       <div>
-      {
-        pomeranians && <p>{ pomeranians[0].name }</p>
-      }
+        <UrlForm />
+        <div>
+        {
+          pomeranians && <p>{ pomeranians[0].name }</p>
+        }
+        </div>
       </div>
     )
   }
