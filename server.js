@@ -35,6 +35,13 @@ app.post('/api/v1/adoptionUrl', (req, res) => {
   });
 })
 
+app.delete('/api/v1/adoptionUrl', (req, res) => {
+  connection.query(`DELETE from adoptionUrls where id=${req.body.id}`, (error, results, fields) => {
+    if (error) throw error;
+    res.send(results);
+  });
+})
+
 app.get('/api/v1/adoptionUrls', (req, res) => {
   connection.query('SELECT * from adoptionUrls', (error, results, fields) => {
     if (error) throw error;

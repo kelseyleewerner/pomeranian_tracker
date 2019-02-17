@@ -12,6 +12,7 @@ export default class UrlForm extends React.Component {
     this.setUrl = this.setUrl.bind(this);
     this.saveUrl = this.saveUrl.bind(this);
     this.loadList = this.loadList.bind(this);
+    this.removeUrl = this.removeUrl.bind(this)
   }
 
   componentDidMount() {
@@ -47,25 +48,41 @@ export default class UrlForm extends React.Component {
     .then(() => this.loadList())
   }
 
+  removeUrlAAA(urlId) {
+    fetch('/api/v1/adoptionUrl', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({id: urlId})
+    })
+    .then((data) => {
+      return data.json()
+    })
+    .then(() => this.loadList())
+  }
+
   render() {
     const {adoptionUrls} = this.state;
 
     return (
-      <form onSubmit={this.saveUrl} >
-        <h2>Pomeranian Website URLs</h2>
-        Input a URL for a website that you would like to use to gather information on Pomeranians up for adoption
-        <div>
-          <label>
-            URL:
-            <input type="text" placeholder="URL" name="adoptionUrl" onChange={this.setUrl} />
-          </label>
-          <button type="submit">
-            Submit URL
-          </button>
-        </div>
+      <div>
+        <form onSubmit={this.saveUrl} >
+          <h2>Pomeranian Website URLs</h2>
+          Input a URL for a website that you would like to use to gather information on Pomeranians up for adoption
+          <div>
+            <label>
+              URL:
+              <input type="text" placeholder="URL" name="adoptionUrl" onChange={this.setUrl} />
+            </label>
+            <button type="submit">
+              Submit URL
+            </button>
+          </div>
+        </form>
         <p>These are the URLs currently being included in the Pom Tracker:</p>
-        <UrlList adoptionUrls={adoptionUrls} />
-      </form>
+        <UrlList removeUrl={this.removeUrl} adoptionUrls={adoptionUrls} />
+      </div>
     );
   }
 }
