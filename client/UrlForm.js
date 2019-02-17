@@ -1,18 +1,31 @@
 import React from 'react'
+import UrlList from './UrlList'
 
 export default class UrlForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      url: ''
+      url: '',
+      adoptionUrls: null
     };
 
     this.setUrl = this.setUrl.bind(this);
     this.saveUrl = this.saveUrl.bind(this);
+    this.loadList = this.loadList.bind(this);
   }
 
   componentDidMount() {
+    this.loadList();
+  }
 
+  loadList() {
+    fetch('/api/v1/adoptionUrls')
+      .then((data) => {
+        return data.json()
+      })
+      .then((jsonData) => {
+        this.setState({ adoptionUrls: jsonData })
+      })
   }
 
   setUrl(event) {
@@ -29,11 +42,14 @@ export default class UrlForm extends React.Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(this.state)
+      body: JSON.stringify({url: this.state.url})
     })
+    .then(() => this.loadList())
   }
 
   render() {
+    const {adoptionUrls} = this.state;
+
     return (
       <form onSubmit={this.saveUrl} >
         <h2>Pomeranian Website URLs</h2>
@@ -47,6 +63,8 @@ export default class UrlForm extends React.Component {
             Submit URL
           </button>
         </div>
+        <p>These are the URLs currently being included in the Pom Tracker:</p>
+        <UrlList adoptionUrls={adoptionUrls} />
       </form>
     );
   }

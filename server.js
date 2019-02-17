@@ -28,8 +28,18 @@ app.get('/api/v1/pomeranians', (req, res) => {
   });
 })
 
-app.post('/api/v1/adoptionUrl', upload.array(), (req, res) => {
-  connection.query(`INSERT INTO adoptionUrls(url) VALUES("${req.body.url}")`);
+app.post('/api/v1/adoptionUrl', (req, res) => {
+  connection.query(`INSERT INTO adoptionUrls(url) VALUES("${req.body.url}")`, (error, results, fields) => {
+    if (error) throw error;
+    res.send(results);
+  });
+})
+
+app.get('/api/v1/adoptionUrls', (req, res) => {
+  connection.query('SELECT * from adoptionUrls', (error, results, fields) => {
+    if (error) throw error;
+    res.send(results);
+  });
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
