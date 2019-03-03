@@ -48,7 +48,7 @@ export default class UrlForm extends React.Component {
     .then(() => this.loadList())
   }
 
-  removeUrlAAA(urlId) {
+  removeUrl(urlId) {
     fetch('/api/v1/adoptionUrl', {
       method: 'DELETE',
       headers: {
